@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31613.86
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35122.118
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "raylib-template", "raylib-template.vcxproj", "{AD3B4E9C-8EFE-4C71-9CA8-278407AA2AAA}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BaseballCardGame", "BaseballCardGame.vcxproj", "{AD3B4E9C-8EFE-4C71-9CA8-278407AA2AAA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,6 +26,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {460B63A5-7E36-4303-A240-064FB3A08F92}
+		SolutionGuid = {8B6A79F1-4939-4779-945D-28F241AA6289}
 	EndGlobalSection
 EndGlobal
