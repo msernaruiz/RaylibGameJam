@@ -27,7 +27,7 @@ When setting up this template on linux for the first time, install the dependenc
 
 You can use this templates in a few ways: using Visual Studio, using CMake, or make your own build setup. This repository comes with Visual Studio and CMake already set up.
 
-Chose one of the follow setup options that fit in you development environment.
+Choose one of the following setup options that fit your development environment.
 
 ### CLI: Makefile
 
