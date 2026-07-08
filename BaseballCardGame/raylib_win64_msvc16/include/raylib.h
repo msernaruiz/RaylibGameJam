@@ -225,7 +225,7 @@ typedef struct Color {
     unsigned char r;        // Color red value
     unsigned char g;        // Color green value
     unsigned char b;        // Color blue value
-    unsigned char a;        // Color alpha value
+    unsigned char a;        // Color m_fAlpha value
 } Color;
 
 // Rectangle, 4 components
@@ -497,7 +497,7 @@ typedef struct FilePathList {
 // Enumerators Definition
 //----------------------------------------------------------------------------------
 // System/Window config flags
-// NOTE: Every bit registers one state (use it with bit masks)
+// NOTE: Every bit registers one m_nState (use it with bit masks)
 // By default all flags are set to 0
 typedef enum {
     FLAG_VSYNC_HINT         = 0x00000040,   // Set to try enabling V-Sync on GPU
@@ -788,18 +788,18 @@ typedef enum {
 // Pixel formats
 // NOTE: Support depends on OpenGL version and platform
 typedef enum {
-    PIXELFORMAT_UNCOMPRESSED_GRAYSCALE = 1, // 8 bit per pixel (no alpha)
+    PIXELFORMAT_UNCOMPRESSED_GRAYSCALE = 1, // 8 bit per pixel (no m_fAlpha)
     PIXELFORMAT_UNCOMPRESSED_GRAY_ALPHA,    // 8*2 bpp (2 channels)
     PIXELFORMAT_UNCOMPRESSED_R5G6B5,        // 16 bpp
     PIXELFORMAT_UNCOMPRESSED_R8G8B8,        // 24 bpp
-    PIXELFORMAT_UNCOMPRESSED_R5G5B5A1,      // 16 bpp (1 bit alpha)
-    PIXELFORMAT_UNCOMPRESSED_R4G4B4A4,      // 16 bpp (4 bit alpha)
+    PIXELFORMAT_UNCOMPRESSED_R5G5B5A1,      // 16 bpp (1 bit m_fAlpha)
+    PIXELFORMAT_UNCOMPRESSED_R4G4B4A4,      // 16 bpp (4 bit m_fAlpha)
     PIXELFORMAT_UNCOMPRESSED_R8G8B8A8,      // 32 bpp
     PIXELFORMAT_UNCOMPRESSED_R32,           // 32 bpp (1 channel - float)
     PIXELFORMAT_UNCOMPRESSED_R32G32B32,     // 32*3 bpp (3 channels - float)
     PIXELFORMAT_UNCOMPRESSED_R32G32B32A32,  // 32*4 bpp (4 channels - float)
-    PIXELFORMAT_COMPRESSED_DXT1_RGB,        // 4 bpp (no alpha)
-    PIXELFORMAT_COMPRESSED_DXT1_RGBA,       // 4 bpp (1 bit alpha)
+    PIXELFORMAT_COMPRESSED_DXT1_RGB,        // 4 bpp (no m_fAlpha)
+    PIXELFORMAT_COMPRESSED_DXT1_RGBA,       // 4 bpp (1 bit m_fAlpha)
     PIXELFORMAT_COMPRESSED_DXT3_RGBA,       // 8 bpp
     PIXELFORMAT_COMPRESSED_DXT5_RGBA,       // 8 bpp
     PIXELFORMAT_COMPRESSED_ETC1_RGB,        // 4 bpp
@@ -850,12 +850,12 @@ typedef enum {
 
 // Color blending modes (pre-defined)
 typedef enum {
-    BLEND_ALPHA = 0,                // Blend textures considering alpha (default)
+    BLEND_ALPHA = 0,                // Blend textures considering m_fAlpha (default)
     BLEND_ADDITIVE,                 // Blend textures adding colors
     BLEND_MULTIPLIED,               // Blend textures multiplying colors
     BLEND_ADD_COLORS,               // Blend textures adding colors (alternative)
     BLEND_SUBTRACT_COLORS,          // Blend textures subtracting colors (alternative)
-    BLEND_ALPHA_PREMULTIPLY,        // Blend premultiplied textures considering alpha
+    BLEND_ALPHA_PREMULTIPLY,        // Blend premultiplied textures considering m_fAlpha
     BLEND_CUSTOM                    // Blend textures using custom src/dst factors (use rlSetBlendMode())
 } BlendMode;
 
@@ -930,12 +930,12 @@ RLAPI bool IsWindowMaximized(void);                               // Check if wi
 RLAPI bool IsWindowFocused(void);                                 // Check if window is currently focused (only PLATFORM_DESKTOP)
 RLAPI bool IsWindowResized(void);                                 // Check if window has been resized last frame
 RLAPI bool IsWindowState(unsigned int flag);                      // Check if one specific window flag is enabled
-RLAPI void SetWindowState(unsigned int flags);                    // Set window configuration state using flags (only PLATFORM_DESKTOP)
-RLAPI void ClearWindowState(unsigned int flags);                  // Clear window configuration state flags
-RLAPI void ToggleFullscreen(void);                                // Toggle window state: fullscreen/windowed (only PLATFORM_DESKTOP)
-RLAPI void MaximizeWindow(void);                                  // Set window state: maximized, if resizable (only PLATFORM_DESKTOP)
-RLAPI void MinimizeWindow(void);                                  // Set window state: minimized, if resizable (only PLATFORM_DESKTOP)
-RLAPI void RestoreWindow(void);                                   // Set window state: not minimized/maximized (only PLATFORM_DESKTOP)
+RLAPI void SetWindowState(unsigned int flags);                    // Set window configuration m_nState using flags (only PLATFORM_DESKTOP)
+RLAPI void ClearWindowState(unsigned int flags);                  // Clear window configuration m_nState flags
+RLAPI void ToggleFullscreen(void);                                // Toggle window m_nState: fullscreen/windowed (only PLATFORM_DESKTOP)
+RLAPI void MaximizeWindow(void);                                  // Set window m_nState: maximized, if resizable (only PLATFORM_DESKTOP)
+RLAPI void MinimizeWindow(void);                                  // Set window m_nState: minimized, if resizable (only PLATFORM_DESKTOP)
+RLAPI void RestoreWindow(void);                                   // Set window m_nState: not minimized/maximized (only PLATFORM_DESKTOP)
 RLAPI void SetWindowIcon(Image image);                            // Set icon for window (only PLATFORM_DESKTOP)
 RLAPI void SetWindowTitle(const char *title);                     // Set title for window (only PLATFORM_DESKTOP)
 RLAPI void SetWindowPosition(int x, int y);                       // Set window position on screen (only PLATFORM_DESKTOP)
@@ -992,8 +992,8 @@ RLAPI void BeginTextureMode(RenderTexture2D target);              // Begin drawi
 RLAPI void EndTextureMode(void);                                  // Ends drawing to render texture
 RLAPI void BeginShaderMode(Shader shader);                        // Begin custom shader drawing
 RLAPI void EndShaderMode(void);                                   // End custom shader drawing (use default shader)
-RLAPI void BeginBlendMode(int mode);                              // Begin blending mode (alpha, additive, multiplied, subtract, custom)
-RLAPI void EndBlendMode(void);                                    // End blending mode (reset to default: alpha blending)
+RLAPI void BeginBlendMode(int mode);                              // Begin blending mode (m_fAlpha, additive, multiplied, subtract, custom)
+RLAPI void EndBlendMode(void);                                    // End blending mode (reset to default: m_fAlpha blending)
 RLAPI void BeginScissorMode(int x, int y, int width, int height); // Begin scissor mode (define screen area for following drawing)
 RLAPI void EndScissorMode(void);                                  // End scissor mode
 RLAPI void BeginVrStereoMode(VrStereoConfig config);              // Begin stereo rendering (requires VR simulator)
@@ -1249,10 +1249,10 @@ RLAPI Image ImageTextEx(Font font, const char *text, float fontSize, float spaci
 RLAPI void ImageFormat(Image *image, int newFormat);                                                     // Convert image data to desired format
 RLAPI void ImageToPOT(Image *image, Color fill);                                                         // Convert image to POT (power-of-two)
 RLAPI void ImageCrop(Image *image, Rectangle crop);                                                      // Crop an image to a defined rectangle
-RLAPI void ImageAlphaCrop(Image *image, float threshold);                                                // Crop image depending on alpha value
-RLAPI void ImageAlphaClear(Image *image, Color color, float threshold);                                  // Clear alpha channel to desired color
-RLAPI void ImageAlphaMask(Image *image, Image alphaMask);                                                // Apply alpha mask to image
-RLAPI void ImageAlphaPremultiply(Image *image);                                                          // Premultiply alpha channel
+RLAPI void ImageAlphaCrop(Image *image, float threshold);                                                // Crop image depending on m_fAlpha value
+RLAPI void ImageAlphaClear(Image *image, Color color, float threshold);                                  // Clear m_fAlpha channel to desired color
+RLAPI void ImageAlphaMask(Image *image, Image alphaMask);                                                // Apply m_fAlpha mask to image
+RLAPI void ImageAlphaPremultiply(Image *image);                                                          // Premultiply m_fAlpha channel
 RLAPI void ImageResize(Image *image, int newWidth, int newHeight);                                       // Resize image (Bicubic scaling algorithm)
 RLAPI void ImageResizeNN(Image *image, int newWidth,int newHeight);                                      // Resize image (Nearest-Neighbor scaling algorithm)
 RLAPI void ImageResizeCanvas(Image *image, int newWidth, int newHeight, int offsetX, int offsetY, Color fill);  // Resize canvas and fill with color
@@ -1272,7 +1272,7 @@ RLAPI Color *LoadImageColors(Image image);                                      
 RLAPI Color *LoadImagePalette(Image image, int maxPaletteSize, int *colorCount);                         // Load colors palette from image as a Color array (RGBA - 32bit)
 RLAPI void UnloadImageColors(Color *colors);                                                             // Unload color data loaded with LoadImageColors()
 RLAPI void UnloadImagePalette(Color *colors);                                                            // Unload colors palette loaded with LoadImagePalette()
-RLAPI Rectangle GetImageAlphaBorder(Image image, float threshold);                                       // Get image alpha border rectangle
+RLAPI Rectangle GetImageAlphaBorder(Image image, float threshold);                                       // Get image m_fAlpha border rectangle
 RLAPI Color GetImageColor(Image image, int x, int y);                                                    // Get image pixel color at (x, y) position
 
 // Image drawing functions
@@ -1320,14 +1320,14 @@ RLAPI void DrawTextureNPatch(Texture2D texture, NPatchInfo nPatchInfo, Rectangle
 RLAPI void DrawTexturePoly(Texture2D texture, Vector2 center, Vector2 *points, Vector2 *texcoords, int pointCount, Color tint);       // Draw a textured polygon
 
 // Color/pixel related functions
-RLAPI Color Fade(Color color, float alpha);                                 // Get color with alpha applied, alpha goes from 0.0f to 1.0f
+RLAPI Color Fade(Color color, float m_fAlpha);                                 // Get color with m_fAlpha applied, m_fAlpha goes from 0.0f to 1.0f
 RLAPI int ColorToInt(Color color);                                          // Get hexadecimal value for a Color
 RLAPI Vector4 ColorNormalize(Color color);                                  // Get Color normalized as float [0..1]
 RLAPI Color ColorFromNormalized(Vector4 normalized);                        // Get Color from normalized values [0..1]
 RLAPI Vector3 ColorToHSV(Color color);                                      // Get HSV values for a Color, hue [0..360], saturation/value [0..1]
 RLAPI Color ColorFromHSV(float hue, float saturation, float value);         // Get a Color from HSV values, hue [0..360], saturation/value [0..1]
-RLAPI Color ColorAlpha(Color color, float alpha);                           // Get color with alpha applied, alpha goes from 0.0f to 1.0f
-RLAPI Color ColorAlphaBlend(Color dst, Color src, Color tint);              // Get src alpha-blended into dst color with tint
+RLAPI Color ColorAlpha(Color color, float m_fAlpha);                           // Get color with m_fAlpha applied, m_fAlpha goes from 0.0f to 1.0f
+RLAPI Color ColorAlphaBlend(Color dst, Color src, Color tint);              // Get src m_fAlpha-blended into dst color with tint
 RLAPI Color GetColor(unsigned int hexValue);                                // Get Color structure from hexadecimal value
 RLAPI Color GetPixelColor(void *srcPtr, int format);                        // Get Color from a source pixel pointer of certain format
 RLAPI void SetPixelColor(void *dstPtr, Color color, int format);            // Set color formatted into destination pixel pointer

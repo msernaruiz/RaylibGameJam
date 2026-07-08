@@ -1,39 +1,96 @@
 #include "raylib.h"
 
-int main() {
-    // Initialization
-	
-    const int screenWidth = 800;
-    const int screenHeight = 450;
+#include "Logo.h"
+#include "Title.h"
 
-    InitWindow(screenWidth, screenHeight, "raylib [core] example - keyboard input");
-    Vector2 ballPosition = { (float)screenWidth/2, (float)screenHeight/2 };
-    SetTargetFPS(60); // Set our game to run at 60 frames-per-second when possible
+int main()
+{
+    const int nScreenWidth = 720;
+    const int nScreenHeight = 720;
+    
+    InitWindow(nScreenWidth, nScreenHeight, "Baseball Card Game");
+    SetTargetFPS(60);
 
+    enum eGameScreen { LOGO, TITLE, GAMEPLAY, ENDING };
 
-    // Main game loop
-	
-	// `WindowShouldClose` detects window close
-    while (!WindowShouldClose()) {
-        // Update
+    eGameScreen nCurrentScreen = LOGO;
 
-        if (IsKeyDown(KEY_RIGHT)) ballPosition.x += 2.0f;
-        if (IsKeyDown(KEY_LEFT)) ballPosition.x -= 2.0f;
-        if (IsKeyDown(KEY_UP)) ballPosition.y -= 2.0f;
-        if (IsKeyDown(KEY_DOWN)) ballPosition.y += 2.0f;
+    cLogo logo(nScreenWidth, nScreenHeight);
+    cTitle title(nScreenWidth, nScreenHeight);
 
-        // Draw
-		
+    while(!WindowShouldClose())
+    {
+        switch(nCurrentScreen)
+        {
+            case LOGO:
+            {
+				if(logo.IsFinished())
+				{
+					nCurrentScreen = TITLE;
+				}
+                else
+                {
+                    logo.Update();
+                }
+            }
+            break;
+
+            case TITLE:
+            {
+                if(IsKeyPressed(KEY_ENTER))
+                {
+                    nCurrentScreen = GAMEPLAY;
+                }
+            }
+            break;
+
+            case GAMEPLAY:
+            break;
+
+            case ENDING:
+            break;
+
+            default:
+            break;
+        }
+
         BeginDrawing();
-		ClearBackground(RED);
-        DrawText("move the ball with arrow keys", 10, 10, 20, GRAY);
-        DrawCircleV(ballPosition, 50, WHITE);
+        ClearBackground(RAYWHITE);
+
+        switch(nCurrentScreen)
+        {
+            case LOGO:
+            {
+                logo.Draw();
+            }
+            break;
+
+            case TITLE:
+            {
+                title.Draw();
+            }
+            break;
+
+            case GAMEPLAY:
+            {
+                DrawText("GAMEPLAY SCREEN", 20, 20, 40, BLUE);
+            }
+            break;
+
+            case ENDING:
+            {
+                DrawText("ENDING SCREEN", 20, 20, 40, RED);
+            }
+            break;
+
+            default:
+            break;
+        }
+
         EndDrawing();
     }
 
-    // De-Initialization
-	
-    CloseWindow(); // Close window and OpenGL context
-
+    CloseWindow();
+    
     return 0;
 }
